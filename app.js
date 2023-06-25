@@ -7,7 +7,7 @@ var logger = require('morgan');
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var wtiRouter = require('./routes/wti');
-
+var exchangeRouter = require('./routes/exchangeRate');
 var app = express();
 
 // view engine setup
@@ -23,7 +23,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 app.use('/wti', wtiRouter)
 app.use('/users', usersRouter);
-
+app.use('/exchange', exchangeRouter);
 //socket 연결
 app.io = require('socket.io')();
 
@@ -42,6 +42,7 @@ app.io.on('connection',(socket) => {
 // stock.js라는 곳에서 최신 가격을 전달 받아서 json으로 전달
     app.io.emit('get-stock-info', msg);
   });
+
 
 });
 

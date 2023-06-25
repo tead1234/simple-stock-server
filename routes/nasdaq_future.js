@@ -17,7 +17,7 @@ router.get('/', async function(req, res) {
             
             const price = wti_price.eq(0).text().trim();
             const price_percent = wti_percent.text().trim();
-            res.status(200).json({price: price, price_percent})
+            res.status(200).json([price, price_percent])
         })
         .catch(err => {
             console.error(err);
