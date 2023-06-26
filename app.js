@@ -1,14 +1,14 @@
-var createError = require('http-errors');
-var express = require('express');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
-
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
-var wtiRouter = require('./routes/wti');
-var exchangeRouter = require('./routes/exchangeRate');
-var app = express();
+const createError = require('http-errors');
+const express = require('express');
+const path = require('path');
+const cookieParser = require('cookie-parser');
+const logger = require('morgan');
+const getExchangeRate = require('./routes/exchangeRate');
+const indexRouter = require('./routes/index');
+const usersRouter = require('./routes/users');
+const app = express();
+const http = require('http').createServer(app);
+const io = require('socket.io')(http);
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -21,38 +21,30 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
-app.use('/wti', wtiRouter)
 app.use('/users', usersRouter);
-app.use('/exchange', exchangeRouter);
-//socket 연결
-app.io = require('socket.io')();
 
-app.io.on('connection',(socket) => {
-  console.log('user connect!');
+let data = [];
+
+io.on('connection', (socket) => {
+  console.log('user connected!');
 
   socket.on('disconnect', () => {
-      console.log('user disconnect!');
+    console.log('user disconnected!');
   });
 
-  socket.on('get-stock-info', (msg) => {
-
-    // msg로 받아온 주식 티커 json을 리스트로 변경
-     // msg.data
-    var test_data = ['aapl', 'tsla', 'inmd'];
-// stock.js라는 곳에서 최신 가격을 전달 받아서 json으로 전달
-    app.io.emit('get-stock-info', msg);
-  });
-
-
+  // 소켓 연결 시간마다 데이터 업데이트
+  setInterval(async () => {
+    const exchangeRate = await getExchangeRate();
+    data.push(exchangeRate);
+    console.log(data);
+    io.emit('financial-info', JSON.stringify(data));
+  }, 1000);
 });
-
-
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));
 });
-
 
 // error handler
 app.use(function(err, req, res, next) {
@@ -65,4 +57,10 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
+// 서버 시작
+http.listen(3300, () => {
+  console.log('Server is listening on port 3000');
+});
 module.exports = app;
+
+
