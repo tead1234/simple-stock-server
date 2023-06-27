@@ -4,7 +4,7 @@ var router = express.Router();
 const cheerio = require('cheerio');
 const getExchangeRate = async () => {
     try {
-        const browser = await puppeteer.launch();
+        const browser = await puppeteer.launch({ headless: "new" });
         const page = await browser.newPage();
         await page.goto('http://samsunggold.co.kr/bbs/board.php?bo_table=exchange');
         const html = await page.content();
@@ -12,9 +12,7 @@ const getExchangeRate = async () => {
         const $ = cheerio.load(html);
         const dollor_won = $('#thema_wrapper > div.at-body > div > div > div.col-md-9.pull-right.at-col.at-main > div.page-wrap > table > tbody > tr:nth-child(2) > td.usd_s.won');
         const dollor_won_exchange = dollor_won.text().trim();
-        // console.log(dollor_won_exchange);
-        return dollor_won_exchange;
-        // res.status(200).json({ dollor_won_exchange: dollor_won_exchange });
+        return [dollor_won_exchange];
     } catch (error) {
         console.log(error);
     }

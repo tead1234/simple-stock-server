@@ -23,4 +23,4 @@ const getWti = async function() {
             console.error(err);
         });
 };
-module.exports = { getWti };
+module.exports = { getWti  };
