@@ -26,21 +26,21 @@ app.use('/', indexRouter);
 app.use('/users', usersRouter);
 
 
-io.on('connection', (socket) => {
-  console.log('user connected!');
+// io.on('connection', (socket) => {
+//   console.log('user connected!');
 
-  socket.on('disconnect', () => {
-    console.log('user disconnected!');
-  });
+//   socket.on('disconnect', () => {
+//     console.log('user disconnected!');
+//   });
 
-  // 소켓 연결 시간마다 데이터 업데이트
-  setInterval(async () => {
-    const exchangeRate = await ExchangeRate.getExchangeRate();
-    // const wti = await Wti.getWti();
-    const Nasdaq = await Nasdaq_future.getNasdaqFutureIndex();
-    io.emit('financial-info', JSON.stringify([...exchangeRate,  ... Nasdaq]));
-  }, 10000);
-});
+//   // 소켓 연결 시간마다 데이터 업데이트
+//   setInterval(async () => {
+//     const exchangeRate = await ExchangeRate.getExchangeRate();
+//     // const wti = await Wti.getWti();
+//     const Nasdaq = await Nasdaq_future.getNasdaqFutureIndex();
+//     io.emit('financial-info', JSON.stringify([...exchangeRate,  ... Nasdaq]));
+//   }, 10000);
+// });
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

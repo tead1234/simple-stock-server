@@ -17,4 +17,7 @@ const getExchangeRate = async () => {
         console.log(error);
     }
 };
+
+
+getExchangeRate();
 module.exports = { getExchangeRate };
