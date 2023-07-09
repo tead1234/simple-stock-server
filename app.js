@@ -3,11 +3,13 @@ const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
-// const ExchangeRate = require('./routes/exchangeRate');
+const ExchangeRate = require('./js/exchangeRate');
 // const Wti =  require('./routes/wti');
-// const Nasdaq_future = require('./routes/nasdaq_future');
+const redis = require('redis');
+const Nasdaq_future = require('./js/nasdaq_future');
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
+const { ConsoleMessage } = require('puppeteer');
 const app = express();
 const http = require('http').createServer(app);
 const io = require('socket.io')(http);
@@ -25,22 +27,16 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 
+// redis middleware
 
-// io.on('connection', (socket) => {
-//   console.log('user connected!');
+  // 소켓 연결 시간마다 데이터 업데이트
+  // setInterval(async () => {
+  //   const exchangeRate = await ExchangeRate.getExchangeRate();
+  //   // const wti = await Wti.getWti();
+  //   const Nasdaq = await Nasdaq_future.getNasdaqFutureIndex();
+  //   io.emit('financial-info', JSON.stringify([...exchangeRate,  ... Nasdaq]));
+  // }, 60000);
 
-//   socket.on('disconnect', () => {
-//     console.log('user disconnected!');
-//   });
-
-//   // 소켓 연결 시간마다 데이터 업데이트
-//   setInterval(async () => {
-//     const exchangeRate = await ExchangeRate.getExchangeRate();
-//     // const wti = await Wti.getWti();
-//     const Nasdaq = await Nasdaq_future.getNasdaqFutureIndex();
-//     io.emit('financial-info', JSON.stringify([...exchangeRate,  ... Nasdaq]));
-//   }, 10000);
-// });
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

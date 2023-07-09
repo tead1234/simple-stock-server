@@ -1,22 +1,26 @@
+const puppeteer = require('puppeteer');
 var express = require('express');
-var request = require('request');
 var router = express.Router();
-const axios = require('axios');
 const cheerio = require('cheerio');
-
-const getWti = async function() {
+const getWti  = async () => {
     try {
-      const response = await axios.get('https://fred.stlouisfed.org/series/DCOILWTICO');
-      const $ = cheerio.load(response.data);
-      const wti_price = $('#meta-left-col > div.float-start.meta-col.col-sm-5.col-5 > span.series-meta-observation-value');
-      const price = wti_price.eq(0).text().trim();
-    //   console.log(price);
+        const browser = await puppeteer.launch({ headless: "new" });
+        const page = await browser.newPage();
+        await page.goto('https://www.dailyfx.com/crude-oil');
+        const html = await page.content();
+        await browser.close();
+        const $ = cheerio.load(html);
+    
+      const wti_price = $('#quotes-container > div > span');
+      // console.log(wti_price)
+      const price = wti_price.text();
+      console.log(price);
       return [price];
-    } catch (err) {
-      console.error(err);
-      return [];
+    } catch (error) {
+        console.log(error);
     }
-  };
-  
+};
+
+  getWti();
   module.exports = { getWti };
   
