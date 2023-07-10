@@ -4,12 +4,13 @@ const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const ExchangeRate = require('./js/exchangeRate');
-// const Wti =  require('./routes/wti');
-const redis = require('redis');
+const Wti =  require('./js/wti');
+const redisClient = require('./js/caching');
 const Nasdaq_future = require('./js/nasdaq_future');
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
 const { ConsoleMessage } = require('puppeteer');
+const { stringify } = require('querystring');
 const app = express();
 const http = require('http').createServer(app);
 const io = require('socket.io')(http);
@@ -26,16 +27,21 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
+async function saveFinancialData(key, v){
+  const Client = await redisClient();
+  await Client.set(key, v, 'EX', 60000);
+} 
 
 // redis middleware
-
-  // 소켓 연결 시간마다 데이터 업데이트
-  // setInterval(async () => {
-  //   const exchangeRate = await ExchangeRate.getExchangeRate();
-  //   // const wti = await Wti.getWti();
-  //   const Nasdaq = await Nasdaq_future.getNasdaqFutureIndex();
-  //   io.emit('financial-info', JSON.stringify([...exchangeRate,  ... Nasdaq]));
-  // }, 60000);
+setInterval(async () =>{
+    const nasdaq = await Nasdaq_future.getNasdaqFutureIndex();
+    const exchange = await ExchangeRate.getExchangeRate();
+    const wti = await Wti.getWti();
+    // console.log(nasdaq, exchange);
+   saveFinancialData('financial-info', [...nasdaq, ...wti,...exchange].toString() );
+   await console.log("보냄");
+}, 60000)
+  
 
 
 // catch 404 and forward to error handler

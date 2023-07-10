@@ -9,8 +9,8 @@ const getNasdaqFutureIndex = async () => {
         await page.goto('https://www.marketwatch.com/investing/future/nq00');
         const html = await page.content();
         await browser.close();
+
         const $ = cheerio.load(html);
-        console.log($)
         
         const Nasdaq_future = $('#maincontent > div.region.region--intraday > div.column.column--aside > div > div.intraday__data > h2 > bg-quote');
         // console.log(Nasdaq_future)
