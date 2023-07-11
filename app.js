@@ -39,7 +39,7 @@ setInterval(async () =>{
     const wti = await Wti.getWti();
     // console.log(nasdaq, exchange);
    saveFinancialData('financial-info', [...nasdaq, ...wti,...exchange].toString() );
-   await console.log("보냄");
+  //  await console.log("보냄");
 }, 60000)
   
 
