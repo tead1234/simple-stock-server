@@ -6,7 +6,6 @@ const getWti  = async () => {
     try {
         const browser = await puppeteer.launch({ headless: "new" });
         const page = await browser.newPage();
-        await page.setDefaultNavigationTimeout(0);
         await page.goto('https://www.cnbc.com/quotes/@CL.1');
         const html = await page.content();
         await browser.close();

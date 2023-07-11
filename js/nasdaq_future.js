@@ -7,13 +7,13 @@ const getNasdaqFutureIndex = async () => {
         const browser = await puppeteer.launch({ headless: "new" });
         const page = await browser.newPage();
         await page.setDefaultNavigationTimeout(0);
-        await page.goto('https://www.marketwatch.com/investing/future/nq00');
+        await page.goto('https://liveindex.org/nasdaq-futures/');
         const html = await page.content();
         await browser.close();
 
         const $ = cheerio.load(html);
         
-        const Nasdaq_future = $('#maincontent > div.region.region--intraday > div.column.column--aside > div > div.intraday__data > h2 > bg-quote');
+        const Nasdaq_future = $('#index_div > table.index_table.indexes_single > tbody > tr.index-line.positive.clickable.clickable-home > td.index-price.positive');
         // console.log(Nasdaq_future)
         
         const Nasdaq_future_percent = Nasdaq_future.text().trim();
@@ -23,5 +23,5 @@ const getNasdaqFutureIndex = async () => {
         console.log(error);
     }
 };
-// getNasdaqFutureIndex();
+getNasdaqFutureIndex();
 module.exports = { getNasdaqFutureIndex  };
