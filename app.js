@@ -8,19 +8,22 @@ const usersRouter = require('./routes/users');
 const app = express();
 const http = require('http').createServer(app);
 const io = require('socket.io')(http);
-const redisClient = require('./js/caching')();
-const redisCli = redisClient.v4;
-// redisClient.set('key', 'value')
-// const setData = async ()=> {
-//     redisCli.set('t', 'test!');
-// }
-const date= async (financialData) => {
-  let data =  await redisCli.get(financialData);
-  console.log(data)
+const redisClient = require('./js/caching');
 
-}
-setData();
-date();
+const redisCli = redisClient();
+const getData = (key) => {
+  return new Promise((resolve, reject) => {
+    redisCli.get(key, (err, data) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(data);
+      }
+    });
+  });
+};
+
+// setInterval(() => Data('please'), 3000);
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
@@ -34,7 +37,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 
-
+// websocket
 io.on('connection', (socket) => {
   console.log('user connected!');
 
@@ -43,9 +46,12 @@ io.on('connection', (socket) => {
   });
 
   // 소켓 연결 시간마다 데이터 업데이트
-  setInterval(async () => {
+  setInterval( async () => {
     // redis data
-    io.emit('financial-info', JSON.stringify([...exchangeRate,  ... Nasdaq]));
+    let fi_data = await getData('financial-info');
+    let news_data = await getData('cnbcNews');
+    io.emit('financial-info', fi_data);
+    io.emit('newsCnbc', news_data);
   }, 60000);
 });
 
