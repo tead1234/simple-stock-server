@@ -40,6 +40,7 @@ setInterval(async () =>{
     // console.log(nasdaq, exchange);
    saveFinancialData('financial-info', [...nasdaq, ...wti,...exchange].toString() );
   //  await console.log("보냄");
+  //
 }, 60000)
   
 
