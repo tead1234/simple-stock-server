@@ -34,6 +34,7 @@ async function saveFinancialData(key, v){
 
 // redis middleware
 setInterval(async () =>{
+  ///
     const nasdaq = await Nasdaq_future.getNasdaqFutureIndex();
     const exchange = await ExchangeRate.getExchangeRate();
     const wti = await Wti.getWti();
