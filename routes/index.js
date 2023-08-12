@@ -12,7 +12,7 @@ router.get('/', function(req, res, next) {
      const Nasdaq = await getNasdaqFutureIndex.getNasdaqFutureIndex();
     
   //   // console.log( JSON.stringify([...exchangeRate,  ... Nasdaq]));
-     return res.status(200).json([...exchangeRate,  ...wti, ... Nasdaq]);
+     return res.status(200).json([...exchangeRate, ...wti, ... Nasdaq]);
     
      };
     a();
