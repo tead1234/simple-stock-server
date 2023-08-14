@@ -5,7 +5,7 @@ const cheerio = require('cheerio');
 const getExchangeRate = async () => {
     try {
         // const browser = await puppeteer.launch({ headless: "new" });
-        const browser = await puppeteer.launch({ignoreDefaultArgs: ['--disable-extensions'], headless: "new"})
+        const browser = await puppeteer.launch({executablePath: 'google-chrome-stable', headless: "new"})
         const page = await browser.newPage();
         await page.goto('http://samsunggold.co.kr/bbs/board.php?bo_table=exchange');
         const html = await page.content();

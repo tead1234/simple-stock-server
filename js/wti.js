@@ -4,7 +4,8 @@ var router = express.Router();
 const cheerio = require('cheerio');
 const getWti  = async () => {
     try {
-        const browser = await puppeteer.launch({ headless: "new" });
+      const browser = await puppeteer.launch({ executablePath: 'google-chrome-stable', headless: "new" });
+
         const page = await browser.newPage();
         await page.goto('https://www.cnbc.com/quotes/@CL.1');
         const html = await page.content();

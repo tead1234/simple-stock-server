@@ -4,7 +4,7 @@ var router = express.Router();
 const cheerio = require('cheerio');
 const getNasdaqFutureIndex = async () => {
     try {
-        const browser = await puppeteer.launch({ headless: "new" });
+        const browser = await puppeteer.launch({executablePath: 'google-chrome-stable', headless: "new"})
         const page = await browser.newPage();
         await page.setDefaultNavigationTimeout(0);
         await page.goto('https://liveindex.org/nasdaq-futures/');
