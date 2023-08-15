@@ -37,9 +37,9 @@ setInterval(async () =>{
   ///
     const nasdaq = await Nasdaq_future.getNasdaqFutureIndex();
     const exchange = await ExchangeRate.getExchangeRate();
-    const wti = await Wti.getWti();
+    // const wti = await Wti.getWti();
     // console.log(nasdaq, exchange);
-   saveFinancialData('financial-info', [...nasdaq, ...wti,...exchange].toString() );
+   saveFinancialData('financial-info', [...nasdaq, ...exchange].toString() );
   //  await console.log("보냄");
   //
 }, 60000)

@@ -8,7 +8,7 @@ router.get('/', function(req, res, next) {
   
    async function a() {
     const exchangeRate = await getExchangeRate.getExchangeRate();
-    const wti = await getWti.getWti();
+    const wti = await getWti;
      const Nasdaq = await getNasdaqFutureIndex.getNasdaqFutureIndex();
     
   //   // console.log( JSON.stringify([...exchangeRate,  ... Nasdaq]));
