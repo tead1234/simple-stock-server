@@ -17,5 +17,8 @@
     "puppeteer": "^20.7.3",
     "redis": "^4.6.7",
     "socket.io": "^4.6.2"
+  },
+  "devDependencies": {
+    "mocha": "^10.2.0"
   }
 }
